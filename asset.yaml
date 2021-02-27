@@ -91,7 +91,7 @@ spec:
   title: Firebase Push Notification
   description: "Firebase push notification logic"
   timeout: 10
-  code: ./function/firebase.js
+  code: ./functions/firebase.js
   runtime:
     name: Node
     language: Javascript
@@ -127,7 +127,7 @@ spec:
   title: Onesignal Push Notification
   description: "Onesignal push notification logic"
   timeout: 10
-  code: ./function/onesignal.js
+  code: ./functions/onesignal.js
   runtime:
     name: Node
     language: Javascript
