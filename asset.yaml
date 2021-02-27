@@ -133,9 +133,7 @@ spec:
     language: Javascript
   environment:
     - name: REST_API_KEY
-      valueFrom:
-        resourceFieldRef:
-          apiKeyName: auth-apikey
+      value: ""
     - name: APP_ID
       value: ""
   dependency:
