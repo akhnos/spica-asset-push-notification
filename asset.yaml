@@ -1,0 +1,173 @@
+# FIREBASE BUCKET
+apiVersion: bucket/v1
+kind: Schema
+metadata:
+  name: bucket-firebase
+spec:
+  title: Firebase Notifications
+  description: You can send a push notification by adding new entry to this bucket.
+  acl:
+    write: "true==true"
+    read: "true==true"
+  properties:
+    title:
+      type: string
+      description: "Add a title to your push notification"
+      options:
+        position: left
+        visible: true
+    body:
+      type: string
+      description: "Push notification content"
+      options:
+        position: left
+        visible: true
+    topic:
+      type: string
+      description: "You can add a topic to send push notifications to multiple users"
+      options:
+        position: right
+        visible: true
+    token:
+      type: string
+      description: "You can add a token to send push notifications to a user"
+      options:
+        position: right
+        visible: true
+  primary:
+    - title
+---
+# ONESIGNAL BUCKET
+apiVersion: bucket/v1
+kind: Schema
+metadata:
+  name: bucket-onesignal
+spec:
+  title: Onesignal Notifications
+  description: You can send a push notification by adding new entry to this bucket.
+  acl:
+    write: "true==true"
+    read: "true==true"
+  properties:
+    title:
+      type: string
+      description: "Add a title to your push notification"
+      options:
+        position: left
+        visible: true
+    body:
+      type: string
+      description: "Push notification content"
+      options:
+        position: left
+        visible: true
+    url:
+      type: string
+      description: "URL for your push notification"
+      options:
+        position: right
+        visible: true
+    segment:
+      type: string
+      description: "You can add a segment to send push notifications to multiple users"
+      options:
+        position: right
+        visible: true
+    player_id:
+      type: string
+      description: "You can add a player_id to send push notifications to a user"
+      options:
+        position: right
+        visible: true
+  primary:
+    - title
+---
+# FUNCTION FIREBASE
+apiVersion: function/v1
+kind: Function
+metadata:
+  name: function-firebase
+spec:
+  title: Firebase Push Notification
+  description: "Firebase push notification logic"
+  timeout: 10
+  code: ./function/firebase.js
+  runtime:
+    name: Node
+    language: Javascript
+  environment:
+    - name: PROJECT_ID
+      value: ""
+    - name: PRIVATE_KEY_ID
+      value: ""
+    - name: PRIVATE_KEY
+      value: ""
+    - name: CLIENT_EMAIL
+      value: ""
+    - name: CLIENT_ID
+      value: ""
+    - name: AUTH_URI
+      value: ""
+    - name: TOKEN_URI
+      value: ""
+    - name: AUTH_PROVIDER_X509_CERT_URL
+      value: ""
+    - name: CLIENT_X509_CERT_URL
+      value: ""
+  dependency:
+    - name: "firebase-admin"
+      version: latest
+---
+# FUNCTION ONESIGNAL
+apiVersion: function/v1
+kind: Function
+metadata:
+  name: function-onesignal
+spec:
+  title: Onesignal Push Notification
+  description: "Onesignal push notification logic"
+  timeout: 10
+  code: ./function/onesignal.js
+  runtime:
+    name: Node
+    language: Javascript
+  environment:
+    - name: REST_API_KEY
+      valueFrom:
+        resourceFieldRef:
+          apiKeyName: auth-apikey
+    - name: APP_ID
+      value: ""
+  dependency:
+    - name: "https"
+      version: latest
+---
+# TRIGGER - FIREBASE
+apiVersion: function/v1
+kind: Trigger
+metadata:
+  name: trigger-firebase-1
+spec:
+  name: default
+  func: function-firebase
+  type: bucket
+  bucketOptions:
+    bucket: 
+      resourceFieldRef:
+        schemaName: bucket-firebase
+    type: INSERT
+---
+# TRIGGER - ONESIGNAL
+apiVersion: function/v1
+kind: Trigger
+metadata:
+  name: trigger-onesignal-1
+spec:
+  name: default
+  func: function-onesignal
+  type: bucket
+  bucketOptions:
+    bucket: 
+      resourceFieldRef:
+        schemaName: bucket-onesignal
+    type: INSERT
