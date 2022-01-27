@@ -34,8 +34,7 @@ spec:
       options:
         position: right
         visible: true
-  primary:
-    - title
+  primary: title
 ---
 # ONESIGNAL BUCKET
 apiVersion: bucket/v1
@@ -79,8 +78,7 @@ spec:
       options:
         position: right
         visible: true
-  primary:
-    - title
+  primary: title
 ---
 # FUNCTION FIREBASE
 apiVersion: function/v1
